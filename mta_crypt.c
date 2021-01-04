@@ -1,7 +1,7 @@
 #include "mta_crypt.h"
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
+password_t password   = {0};
 
 int main(int argc, char *argv[]) {
 	int num_of_decypters = atoi(argv[2]);
