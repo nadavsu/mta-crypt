@@ -16,7 +16,6 @@ typedef struct password_ {
 	char *key;
 	int key_len;
 	int password_len;
-
 	char *found_password;
 } password_t;
 
