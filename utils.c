@@ -5,10 +5,10 @@
  * Updates the number of threads created using thread_counter.
  * Exits with THREAD_ERROR_CODE if unable to create one of the threads.
  */
-void create_n_threads(pthread_t *threads, int n, void *(*routine)(void*)) {
+void create_n_threads(pthread_t *threads, int n, void *(*routine)(void*), void *arg) {
 	int rc;
 	for (int i = 0; i < n; i++) {
-		rc = pthread_create(&threads[i], NULL, routine, (void *) i);
+		rc = pthread_create(&threads[i], NULL, routine, arg);
 		if (rc != 0) {
 			fprintf(stderr, "%s\n", THREAD_ERROR_MSG);
 			exit(THREAD_ERROR_CODE);

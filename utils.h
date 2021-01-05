@@ -12,7 +12,7 @@
 
 #define SYNCHRONIZED(MUTEX, COMMAND)	pthread_mutex_lock(MUTEX); COMMAND; pthread_mutex_unlock(MUTEX);
 
-void create_n_threads(pthread_t *threads, int n, void *(*routine)(void*));
+void create_n_threads(pthread_t *threads, int n, void *(*routine)(void*), void *arg);
 void join_n_threads(pthread_t *threads, int n);
 void *malloc_c(size_t size);
 void pthread_mutex_init_c(pthread_mutex_t *t, const pthread_mutexattr_t *attr);
