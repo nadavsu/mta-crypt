@@ -16,10 +16,10 @@ int main(int argc, char *argv[]) {
 	args.timeout = timeout;
 	args.password_length = password_length;
 
-	create_n_threads(&encrypter_thread, NUM_OF_ENCRYPTERS, encrypt, (void *)args);
+	create_n_threads(&encrypter_thread, NUM_OF_ENCRYPTERS, encrypt, (void *)&args);
 	create_n_threads(decrypter_threads, num_of_decypters, decrypt, NULL);
 
-	pthread_join(encrypter, NULL);
+	pthread_join(encrypter_thread, NULL);
 	//join decrypters?
 
 	return 0;

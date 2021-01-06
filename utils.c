@@ -36,10 +36,14 @@ void *malloc_c(size_t size) {
 
 
 //Checked version of pthread_mutex_init
-void pthread_mutex_init_c(pthread_mutex_t *t, const pthread_mutexattr_t *attr) {
+void pthread_mutex_init_c(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr) {
 	int rc = pthread_mutex_init(mutex, NULL);
 	if (rc != 0) {
 		fprintf(stderr, MUTEX_ERROR_MSG);
 		exit(MUTEX_ERROR_CODE);
 	}
+}
+
+void message_stamp(const char* author, const char *message_type) {
+	printf("%9.9u %9.9s %9.9s", (unsigned) time(NULL), author, message_type);
 }

@@ -53,3 +53,8 @@ dkms.conf
 
 # macOS Shitfiles
 .DS_Store
+
+# CLion files
+cmake-build-debug/
+CMakeLists.txt
+.idea/
