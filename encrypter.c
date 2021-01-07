@@ -25,6 +25,7 @@ void *encrypt(void *arg) {
     created_passwords_counter = 0;
 
     while (1) {
+        srand(time(NULL));
         pthread_mutex_lock(&mutex);
         init_password_queue(&password_queue);
         generate_password();

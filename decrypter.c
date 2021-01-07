@@ -30,6 +30,7 @@ void *decrypt(void *thread_id) {
 
 
     while (1) {
+        srand(time(NULL));
         pthread_mutex_lock(&mutex);
         if (num_pass_created < created_passwords_counter) {
             num_pass_created = created_passwords_counter;
