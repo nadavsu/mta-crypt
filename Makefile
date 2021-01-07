@@ -22,6 +22,7 @@ all: $(ODIR)/$(TARGET_NAME)
 #pattern matched rule - anything that ends with .o relies on the same file with .c
 #magic variables: $@ == target, $^ == all prequisites
 $(ODIR)/%.o : %.c
+	echo Compiliing $@ with $^
 	$(CC) -g -c $^ $(LIBS)
 
 $(ODIR)/$(TARGET_NAME): $(OBJS)

@@ -29,32 +29,31 @@ void *encrypt(void *arg) {
         init_password_queue(&password_queue);
         generate_password();
 
+        clock_gettime(CLOCK_REALTIME, &timeout_timer);
+        timeout_timer.tv_sec += timeout_time;
+        pthread_cond_broadcast(&decrypter_cond);
+
         while (1) {
             char *last_password_guess = NULL;
-            if (password_queue.checked_passwords == 0) {
-                clock_gettime(CLOCK_REALTIME, &timeout_timer);
-                timeout_timer.tv_sec += timeout_time;
-
-                pthread_cond_broadcast(&encrypter_cond);
-                int res = pthread_cond_timedwait(&encrypter_cond, &mutex, &timeout_timer);
-                if (res == EINVAL) {
-                    message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_ERR);
-                    printf("One of the values in pthread_cond_timedwait is invalid. Exiting...\n");
-                    exit(-1);
-                } else if (res == ETIMEDOUT) {
-                    message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_ERR);
-                    printf("Timeout occurred (%ds)! Generating new password...\n", timeout_time);
-                    break;
-                }
-            }
-            if (password_queue.checked_passwords < password_queue.sent_passwords) {
-                last_password_guess = get_password(&password_queue);
-                pthread_cond_signal(&decrypter_cond);
-            }
-            //TODO: this one
-            pthread_mutex_unlock(&mutex);
-            if (check_password(last_password_guess)) {
+            int res = pthread_cond_timedwait(&encrypter_cond, &mutex, &timeout_timer);
+            if (res == EINVAL) {
+                message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_ERR);
+                printf("One of the values in pthread_cond_timedwait is invalid. Exiting...\n");
+                pthread_mutex_unlock(&mutex);
+                exit(-1);
+            } else if (res == ETIMEDOUT) {
+                message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_ERR);
+                printf("Timeout occurred (%ds)! Generating new password...\n", timeout_time);
+                pthread_mutex_unlock(&mutex);
                 break;
+            } else {
+                while (password_queue.checked_passwords < password_queue.sent_passwords) {
+                    last_password_guess = get_password(&password_queue);
+                    pthread_mutex_unlock(&mutex);
+                    if (check_password(last_password_guess)) {
+                        break;
+                    }
+                }
             }
         }
     }
@@ -68,9 +67,10 @@ void *encrypt(void *arg) {
 char *generate_password() {
     MTA_get_rand_data(original_password, password_length);
     MTA_get_rand_data(key, key_length);
-    MTA_CRYPT_RET_STATUS status = MTA_encrypt(key, key_length, original_password, password_length, encrypted_password.password,
-                                           password_length);
-    if(status != MTA_CRYPT_RET_OK){
+    MTA_CRYPT_RET_STATUS status = MTA_encrypt(key, key_length, original_password, password_length,
+                                              encrypted_password.password,
+                                              password_length);
+    if (status != MTA_CRYPT_RET_OK) {
         printf("ERROR at encrypter -- at MTA_CRYPT");
         return NULL;
     }

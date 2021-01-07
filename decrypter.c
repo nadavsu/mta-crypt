@@ -62,7 +62,7 @@ void *decrypt(void *thread_id) {
 
 }
 
-int printable_pass(char* decrypt_pass, len){
+int printable_pass(char* decrypt_pass, int len){
     for(int i=0;i<len;i++){
         if (isprint(decrypt_pass[i]) == 0)
             return 0;
