@@ -16,7 +16,6 @@ typedef struct password_queue {
 	char *passwords[QUEUE_SIZE];        //The password queue
 } password_queue_t;
 
-
 void init_password_queue(password_queue_t *queue);
 char *get_password(password_queue_t *queue);
 void put_password(password_queue_t * queue, char *password);

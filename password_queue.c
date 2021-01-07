@@ -12,6 +12,7 @@ char *get_password(password_queue_t *queue) {
 }
 
 void put_password(password_queue_t *queue, char *password) {
-	strcpy(queue->passwords[queue->sent_passwords], password);
+	free(queue->passwords[queue->sent_passwords]);
+	queue->passwords[queue->sent_passwords] = strdup(password);
 	queue->sent_passwords = (queue->sent_passwords + 1) % QUEUE_SIZE;
 }

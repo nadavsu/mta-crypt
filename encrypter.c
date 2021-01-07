@@ -5,11 +5,11 @@ volatile int created_passwords_counter;
 volatile password_t encrypted_password;
 
 char *original_password;
-int password_length;
+unsigned int password_length;
 char *key;
-int key_length;
+unsigned int key_length;
 
-int timeout_time;
+unsigned int timeout_time;
 struct timespec timeout_timer;
 
 void *encrypt(void *arg) {
@@ -65,11 +65,16 @@ void *encrypt(void *arg) {
  * Generates a new password and puts it in encrypted_password global volatile variable.
  */
 char *generate_password() {
-    MTA_get_rand_data(original_password, password_length);
-    MTA_get_rand_data(key, key_length);
+    do {
+        MTA_get_rand_data(original_password, password_length);
+    } while (!printable_pass(original_password, password_length));
+    do {
+        MTA_get_rand_data(key, key_length);
+    } while (!printable_pass(key, key_length));
+
     MTA_CRYPT_RET_STATUS status = MTA_encrypt(key, key_length, original_password, password_length,
                                               encrypted_password.password,
-                                              password_length);
+                                              &password_length);
     if (status != MTA_CRYPT_RET_OK) {
         printf("ERROR at encrypter -- at MTA_CRYPT");
         return NULL;

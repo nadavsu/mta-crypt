@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <assert.h>
+#include <ctype.h>
 
 #include "mta_rand.h"
 #include "mta_crypt.h"
@@ -26,8 +27,8 @@ typedef struct password_ {
  * Arguments for the encrypter thread.
  */
 typedef struct encrypter_args {
-	int timeout;
-	int password_length;
+	unsigned int timeout;
+	unsigned int password_length;
 } encrypter_args_t;
 
 
