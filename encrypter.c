@@ -25,7 +25,6 @@ void *encrypt(void *arg) {
     created_passwords_counter = 0;
 
     while (1) {
-        srand(ENCRYPTER_RAND_SEED);
         pthread_mutex_lock(&mutex);
         init_password_queue(&password_queue);
         generate_password();
@@ -72,7 +71,8 @@ char *generate_password() {
     do {
         MTA_get_rand_data(key, key_length);
     } while (!printable_pass(key, key_length));
-
+    
+    srand(ENCRYPTER_RAND_SEED);
     MTA_CRYPT_RET_STATUS status = MTA_encrypt(key, key_length, original_password, password_length,
                                               encrypted_password.password,
                                               &password_length);
