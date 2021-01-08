@@ -7,7 +7,7 @@ LDIR = ../lib
 ODIR ?= build
 
 CFLAGS = -I$(IDIR)
-LIBS = -lpthread -lmta_rand -lmta_crypt
+LIBS = -lpthread -lmta_rand -lmta_crypt -lcrypto
 
 #finding all files with suffix .c, removing the './' returned by 'find' command using subst command.
 SRCS := $(subst ./,,$(shell find . -name "*.c"))

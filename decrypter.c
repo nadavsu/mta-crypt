@@ -1,9 +1,11 @@
 #include "decrypter.h"
 
 void *decrypt(void *thread_id) {
-
     long id = (long) thread_id;
     int iterations = 0;
+
+    char decrypter_name[13];
+    sprintf(decrypter_name, "[CLIENT #%d]", (int)id);
 
     pthread_mutex_lock(&mutex);
     while (created_passwords_counter < 1) {
@@ -30,7 +32,6 @@ void *decrypt(void *thread_id) {
 
 
     while (1) {
-        srand(time(NULL));
         pthread_mutex_lock(&mutex);
         if (num_pass_created < created_passwords_counter) {
             num_pass_created = created_passwords_counter;
@@ -38,7 +39,7 @@ void *decrypt(void *thread_id) {
             iterations = 0;
         }
         pthread_mutex_unlock(&mutex);
-
+        srand(DECRYPTER_RAND_SEED);
         MTA_get_rand_data(key,key_len);
         MTA_CRYPT_RET_STATUS status = MTA_decrypt(key, key_len, encrypt_pass, pass_len, decrypt_pass, &pass_len);
 
@@ -47,11 +48,11 @@ void *decrypt(void *thread_id) {
             continue;
         }
 
-        if(printable_pass(decrypt_pass, pass_len)){
+        if(printable_pass(decrypt_pass, pass_len)) {
             pthread_mutex_lock(&mutex);
-			printf("%9.9u [CLIENT] %9.9ld %9.9s ", (unsigned) time(NULL), id , "[INFO]");
-            printf("Decrypted password - %s key guessed -  %s Sending to server after %d iterations\n", decrypt_pass, key, iterations);
-            put_password(&password_queue, decrypt_pass);
+            message_stamp(decrypter_name, MESSAGE_TYPE_INFO);
+            printf("Decrypted password - %s key guessed - %s Sending to server after %d iterations\n", decrypt_pass, key, iterations);
+            put_password(&password_queue, decrypt_pass, id);
             pthread_cond_signal(&encrypter_cond);
             pthread_cond_wait(&decrypter_cond, &mutex);
             pthread_mutex_unlock(&mutex);

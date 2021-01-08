@@ -45,7 +45,7 @@ void pthread_mutex_init_c(pthread_mutex_t *mutex, const pthread_mutexattr_t *att
 }
 
 void message_stamp(const char* author, const char *message_type) {
-	printf("%9.9u %9.9s %9.9s ", (unsigned) time(NULL), author, message_type);
+	printf("%-10u %-14s %-9s ", (unsigned) time(NULL), author, message_type);
 }
 
 int printable_pass(char* decrypt_pass, int len){

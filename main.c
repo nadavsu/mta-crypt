@@ -11,15 +11,15 @@ int main(int argc, char *argv[]) {
 	}
 	unsigned int num_of_decypters = atoi(argv[2]);
 	unsigned int password_length = atoi(argv[4]);
-	unsigned int timeout = 5;
-	if (argv[6] != NULL) {
+	unsigned int timeout = INT_MAX;
+	if (argc >= 6 && argv[6] != NULL) {
 		timeout = atoi(argv[6]);
 	}
 
 	pthread_t encrypter_thread;
 	pthread_t decrypter_threads[num_of_decypters];
 
-	encrypter_args_t args;
+	ENCRYPTER_ARGS_T args;
 	args.timeout = timeout;
 	args.password_length = password_length;
 

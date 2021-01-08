@@ -21,7 +21,7 @@
 typedef struct password_ {
 	char *password;
 	int length;
-} password_t;
+} PASSWORD_T;
 
 /*
  * Arguments for the encrypter thread.
@@ -29,14 +29,14 @@ typedef struct password_ {
 typedef struct encrypter_args {
 	unsigned int timeout;
 	unsigned int password_length;
-} encrypter_args_t;
+} ENCRYPTER_ARGS_T;
 
 
 extern pthread_cond_t encrypter_cond;
 extern pthread_cond_t decrypter_cond;
 extern pthread_mutex_t mutex;
-extern volatile password_t encrypted_password;
-extern password_queue_t password_queue;
+extern volatile PASSWORD_T encrypted_password;
+extern PASSWORD_QUEUE_T password_queue;
 extern volatile int created_passwords_counter;	//Encrypter records the number of passwords created.
 
 #endif	//MTA_CRYPT_H

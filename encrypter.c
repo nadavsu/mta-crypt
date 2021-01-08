@@ -1,8 +1,8 @@
 #include "encrypter.h"
 
-password_queue_t password_queue;
+PASSWORD_QUEUE_T password_queue;
 volatile int created_passwords_counter;
-volatile password_t encrypted_password;
+volatile PASSWORD_T encrypted_password;
 
 char *original_password;
 unsigned int password_length;
@@ -13,7 +13,7 @@ unsigned int timeout_time;
 struct timespec timeout_timer;
 
 void *encrypt(void *arg) {
-    encrypter_args_t *encrypter_args = (encrypter_args_t *) arg;
+    ENCRYPTER_ARGS_T *encrypter_args = (ENCRYPTER_ARGS_T *) arg;
     timeout_time = encrypter_args->timeout;
     password_length = encrypter_args->password_length;
     key_length = password_length / 8;
@@ -25,7 +25,7 @@ void *encrypt(void *arg) {
     created_passwords_counter = 0;
 
     while (1) {
-        srand(time(NULL));
+        srand(ENCRYPTER_RAND_SEED);
         pthread_mutex_lock(&mutex);
         init_password_queue(&password_queue);
         generate_password();
@@ -35,7 +35,7 @@ void *encrypt(void *arg) {
         pthread_cond_broadcast(&decrypter_cond);
 
         while (1) {
-            char *last_password_guess = NULL;
+            DECRYPTED_PASSWORD_T decrypted_password;
             int res = pthread_cond_timedwait(&encrypter_cond, &mutex, &timeout_timer);
             if (res == EINVAL) {
                 message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_ERR);
@@ -49,9 +49,9 @@ void *encrypt(void *arg) {
                 break;
             } else {
                 while (password_queue.checked_passwords < password_queue.sent_passwords) {
-                    last_password_guess = get_password(&password_queue);
+                    decrypted_password = get_password(&password_queue);
                     pthread_mutex_unlock(&mutex);
-                    if (check_password(last_password_guess)) {
+                    if (check_password(decrypted_password)) {
                         break;
                     }
                 }
@@ -86,16 +86,16 @@ char *generate_password() {
            encrypted_password.password);
 }
 
-int check_password(char *decrypted_password) {
-    if (decrypted_password) {
-        if (strcmp(original_password, decrypted_password) == 0) {
+int check_password(DECRYPTED_PASSWORD_T decrypted_password) {
+    if (decrypted_password.password) {
+        if (strcmp(original_password, decrypted_password.password) == 0) {
             message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_SUCC);
-            printf("Password decrypted successfully by client #%d, received - %s original - %s\n", 0,
-                   decrypted_password, original_password);
+            printf("Password decrypted successfully by client #%d, received - %s original - %s\n", decrypted_password.thread_id,
+                   decrypted_password.password, original_password);
             return 1;
         } else {
             message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_ERR);
-            printf("Wrong password received from client #%d, received - %s original - %s\n", 0, decrypted_password,
+            printf("Wrong password received from client #%d, received - %s original - %s\n", decrypted_password.thread_id, decrypted_password.password,
                    original_password);
             return 0;
         }
