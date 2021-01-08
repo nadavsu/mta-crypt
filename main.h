@@ -35,6 +35,7 @@ typedef struct encrypter_args {
 extern pthread_cond_t encrypter_cond;
 extern pthread_cond_t decrypter_cond;
 extern pthread_mutex_t mutex;
+extern pthread_mutex_t print_mutex;
 extern volatile PASSWORD_T encrypted_password;
 extern PASSWORD_QUEUE_T password_queue;
 extern volatile int created_passwords_counter;	//Encrypter records the number of passwords created.

@@ -24,17 +24,20 @@ void *encrypt(void *arg) {
     key = (char *) malloc_c(key_length * sizeof(char) + 1);
     created_passwords_counter = 0;
 
+
+    DECRYPTED_PASSWORD_T decrypted_password;
+
     while (1) {
+        int is_decrypted = 0;
         pthread_mutex_lock(&mutex);
         init_password_queue(&password_queue);
         generate_password();
 
         clock_gettime(CLOCK_REALTIME, &timeout_timer);
         timeout_timer.tv_sec += timeout_time;
-        pthread_cond_broadcast(&decrypter_cond);
-
-        while (1) {
-            DECRYPTED_PASSWORD_T decrypted_password;
+        
+        while(!is_decrypted) {
+            pthread_cond_broadcast(&decrypter_cond);
             int res = pthread_cond_timedwait(&encrypter_cond, &mutex, &timeout_timer);
             if (res == EINVAL) {
                 message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_ERR);
@@ -50,9 +53,11 @@ void *encrypt(void *arg) {
                 while (password_queue.checked_passwords < password_queue.sent_passwords) {
                     decrypted_password = get_password(&password_queue);
                     pthread_mutex_unlock(&mutex);
-                    if (check_password(decrypted_password)) {
+                    is_decrypted = check_password(decrypted_password);
+                    if (is_decrypted) {
                         break;
                     }
+                    pthread_mutex_lock(&mutex);
                 }
             }
         }
@@ -81,17 +86,21 @@ char *generate_password() {
         return NULL;
     }
     created_passwords_counter++;
+    pthread_mutex_lock(&mutex_lock);
     message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_INFO);
     printf("New password generated: %s - key: %s - encrypted password: %s\n", original_password, key,
            encrypted_password.password);
+    pthread_mutex_unlock(&mutex_lock);
 }
 
 int check_password(DECRYPTED_PASSWORD_T decrypted_password) {
     if (decrypted_password.password) {
         if (strcmp(original_password, decrypted_password.password) == 0) {
+            pthread_mutex_lock(&mutex_lock);
             message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_SUCC);
             printf("Password decrypted successfully by client #%d, received - %s original - %s\n", decrypted_password.thread_id,
                    decrypted_password.password, original_password);
+            pthread_mutex_unlock(&mutex_lock);
             return 1;
         } else {
             message_stamp(ENCRYPTER_NAME, MESSAGE_TYPE_ERR);

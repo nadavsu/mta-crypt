@@ -1,6 +1,7 @@
 #include "main.h"
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t print_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t decrypter_cond   = PTHREAD_COND_INITIALIZER;
 pthread_cond_t encrypter_cond   = PTHREAD_COND_INITIALIZER;
 

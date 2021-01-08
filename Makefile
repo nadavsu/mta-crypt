@@ -2,8 +2,6 @@ TARGET_NAME = mtacrypt.out
 CC = gcc
 
 #added libraries.
-IDIR = ../include
-LDIR = ../lib
 ODIR ?= build
 
 CFLAGS = -I$(IDIR)
@@ -21,13 +19,13 @@ OBJS := $(addprefix $(ODIR)/,$(patsubst %.c,%.o,$(SRCS)))
 all: $(ODIR)/$(TARGET_NAME)
 
 #pattern matched rule - anything that ends with .o relies on the same file with .c
-#magic variables: $@ == target, $^ == all prequisites
+#magic variables: $@ == target, $^ == all prequisites, $< == first prequisite
 $(ODIR)/%.o : %.c
 	@mkdir -p $(ODIR)
 	$(CC) -c -o $@ $<
 
-$(ODIR)/$(TARGET_NAME): $(OBJS)
-	$(CC) -g -Wall $^ -o $@ $(LIBS)
+$(ODIR)/$(TARGET_NAME): $(OBJS) 
+	$(CC) -o $@ $^ $(LIBS)
 
 .PHONY: clean
 clean:

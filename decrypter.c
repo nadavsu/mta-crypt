@@ -50,8 +50,10 @@ void *decrypt(void *thread_id) {
 
         if(printable_pass(decrypt_pass, pass_len)) {
             pthread_mutex_lock(&mutex);
+            pthread_mutex_lock(&mutex_lock);
             message_stamp(decrypter_name, MESSAGE_TYPE_INFO);
             printf("Decrypted password - %s key guessed - %s Sending to server after %d iterations\n", decrypt_pass, key, iterations);
+            pthread_mutex_unlock(&mutex_lock);
             put_password(&password_queue, decrypt_pass, id);
             pthread_cond_signal(&encrypter_cond);
             pthread_cond_wait(&decrypter_cond, &mutex);
