@@ -5,7 +5,7 @@ CC = gcc
 ODIR ?= build
 
 CFLAGS = -I$(IDIR)
-LIBS = -lpthread -lmta_rand -lmta_crypt -lcrypto
+LIBS = -lpthread -lmta_rand -lmta_crypt
 
 OUTFILE = $(ODIR)/out.log
 
@@ -22,7 +22,7 @@ all: $(ODIR)/$(TARGET_NAME)
 #magic variables: $@ == target, $^ == all prequisites, $< == first prequisite
 $(ODIR)/%.o : %.c
 	@mkdir -p $(ODIR)
-	$(CC) -c -o $@ $<
+	$(CC) -c $< -o $@ 
 
 $(ODIR)/$(TARGET_NAME): $(OBJS) 
 	$(CC) -o $@ $^ $(LIBS)

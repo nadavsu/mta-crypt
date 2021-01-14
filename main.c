@@ -29,7 +29,6 @@ int main(int argc, char *argv[]) {
 		pthread_create(&decrypter_threads[i], NULL, decrypt , (void *) (i + 1)); 
 	}
 	pthread_join(encrypter_thread, NULL);
-	//join decrypters?
 
 	return 0;
 }

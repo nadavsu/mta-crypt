@@ -36,7 +36,7 @@ void *decrypt(void *thread_id) {
         if (num_pass_created < created_passwords_counter) {
             num_pass_created = created_passwords_counter;
             memcpy(encrypt_pass, encrypted_password.password, pass_len + 1);
-            iterations = 0;
+            iterations = 1;
         }
         pthread_mutex_unlock(&mutex);
         srand(DECRYPTER_RAND_SEED);
@@ -50,17 +50,15 @@ void *decrypt(void *thread_id) {
 
         if(printable_pass(decrypt_pass, pass_len)) {
             pthread_mutex_lock(&mutex);
-            pthread_mutex_lock(&mutex_lock);
+            pthread_mutex_lock(&print_mutex);
             message_stamp(decrypter_name, MESSAGE_TYPE_INFO);
             printf("Decrypted password - %s key guessed - %s Sending to server after %d iterations\n", decrypt_pass, key, iterations);
-            pthread_mutex_unlock(&mutex_lock);
+            pthread_mutex_unlock(&print_mutex);
             put_password(&password_queue, decrypt_pass, id);
-            pthread_cond_signal(&encrypter_cond);
-            pthread_cond_wait(&decrypter_cond, &mutex);
             pthread_mutex_unlock(&mutex);
+            pthread_cond_signal(&encrypter_cond);
         }
         iterations++;
     }
 
 }
-

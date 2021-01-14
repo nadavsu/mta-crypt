@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define QUEUE_SIZE 128
+#define QUEUE_SIZE 256
 
 typedef struct decrypted_password {
 	char *password;
