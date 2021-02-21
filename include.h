@@ -1,24 +1,36 @@
 #ifndef INCLUDE_H
 #define INCLUDE_H
 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <mqueue.h>
+#include <limits.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#define SERVER_MQ_NAME				"server_mq"
+
+#define MQ_MAX_MESSAGE				1024
+
 #define MQ_NAME_LEN 				32
 #define NEW_CONNECTION_PRIORITY		2
 #define NEW_PASSWORD_PRIORITY		1
 
-enum TYPE {
+typdef enum TYPE {
 	NEW_CONNECTION,
 	NEW_PASSWORD,
-};
+} TYPE_E;
 
 
 typedef struct MESSAGE {
-	enum TYPE message_type;
+	enum TYPE type;
 	char data[];
 } MESSAGE_T;
 
 
 typedef struct MESSAGE_PASSWORD {
-	int pass_num;
+	enum TYPE type;
 	int pass_len;
 	char pass[];
 } MESSAGE_PASSWORD_T;
@@ -26,8 +38,9 @@ typedef struct MESSAGE_PASSWORD {
 
 //Should be higher priority than normal message.
 typedef struct NEW_CONNECTION {
+	enum TYPE type;
 	int pid;
-	char[MQ_NAME_LEN] mq_name;
+	char mq_name[MQ_NAME_LEN];
 } NEW_CONNECTION_T;
 
 #endif
