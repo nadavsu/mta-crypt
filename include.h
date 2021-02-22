@@ -9,39 +9,49 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define MAX_CONNECTIONS				31
+
 #define SERVER_MQ_NAME				"server_mq"
+#define SERVER_MQ_IND				0
 
 #define MQ_MAX_MESSAGE				1024
 
 #define MQ_NAME_LEN 				32
+
+#define CLOSE_CONNECTION_PRIORITY	2
 #define NEW_CONNECTION_PRIORITY		2
 #define NEW_PASSWORD_PRIORITY		1
 
 typdef enum TYPE {
 	NEW_CONNECTION,
+	CLOSE_CONNECTION,
 	NEW_PASSWORD,
+	UNDEFINED
 } TYPE_E;
 
 
-typedef struct MESSAGE {
+typedef struct GENERIC_MSG_T {
 	enum TYPE type;
 	char data[];
-} MESSAGE_T;
+} GEN_MSG_T;
 
 
 typedef struct MESSAGE_PASSWORD {
 	enum TYPE type;
 	int pass_len;
 	char pass[];
-} MESSAGE_PASSWORD_T;
+} PASSWORD_MSG_T;
 
 
-//Should be higher priority than normal message.
-typedef struct NEW_CONNECTION {
+typedef struct NEW_CONNECTION_MESSAGE {
 	enum TYPE type;
-	int pid;
 	char mq_name[MQ_NAME_LEN];
-} NEW_CONNECTION_T;
+} NEW_CONNECTION_MSG_T;
+
+typedef struct CLOSE_CONNECTION_MSG {
+	enum TYPE type;
+	char mq_name[MQ_NAME_LEN];
+} CLOSE_CONNECTION_MSG_T
 
 #endif
 
