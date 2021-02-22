@@ -74,8 +74,8 @@ void *encrypt(void *arg) {
 
  
  void get_printable_data(char *buffer, int length){
-    int i=0;
-    while(i < length){
+    int i = 0;
+    while (i < length) {
     	char ch;
     	while(!isprint(ch = MTA_get_rand_char())){}
     	buffer[i] = ch;
@@ -84,6 +84,7 @@ void *encrypt(void *arg) {
  }
  
 char *generate_password() {
+
     get_printable_data(original_password, password_length);
     MTA_get_rand_data(key, key_length);
     
