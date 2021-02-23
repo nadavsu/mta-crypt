@@ -3,8 +3,11 @@
 
 #include "main.h"
 #include "utils.h"
-#include "password_queue.h"
+#include "include.h"
+
+#define MAX_PASS_LEN 64 
 
 void *decrypt(void *thread_id);
+
 
 #endif
