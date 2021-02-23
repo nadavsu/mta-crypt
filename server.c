@@ -136,7 +136,7 @@ int encrypt_password(char *password, int password_length, char *key, int key_len
 int update_decrypters(PASSWORD_MSG_T message, int message_size) {
 	for (int i = 1; i < MAX_CONNECTIONS + 1; i++) {
 		if (mqs[i] != -1) {
-			mq_send(mqs[i], (char*) message, message_size, NEW_PASSWORD_PRIORITY);
+			mq_send(mqs[i], (char*) message, MQ_MAX_MESSAGE_SIZE, NEW_PASSWORD_PRIORITY);
 		}
 	}
 }
