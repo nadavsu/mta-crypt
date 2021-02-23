@@ -15,6 +15,7 @@
 #define SERVER_MQ_IND				0
 
 #define MQ_MAX_MESSAGE				1024
+#define MQ_MAX_MESSAGE_SIZE			72
 
 #define MQ_NAME_LEN 				32
 
