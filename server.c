@@ -1,7 +1,6 @@
 #include "server.h"
 
 mqd_t mqs[MAX_CONNECTIONS + 1] = {-1};
-int mqs_index = 1;
 char *current_password, *key;
 int pass_length, key_length;
 
@@ -53,7 +52,7 @@ int main(int argc, char *argv[]) {
 	encrypt_password(current_password, password_length, key, key_length);
 
 	for (;;) {
-		int msg_len = mq_receive(server_mq, (char*)message, MQ_MAX_MSG_SIZE, NULL);
+		int msg_len = mq_receive(mqs[SERVER_MQ_IND], (char*)message, MQ_MAX_MSG_SIZE, NULL);
 		if (msg_len == -1) {
 			exit(errno);
 		}
@@ -74,11 +73,23 @@ int main(int argc, char *argv[]) {
 }
 
 int create_connection(NEW_CONNECTION_MSG_T *message, mq_attr *attr) {
-	mqs[mqs_index] = mq_open(message->mq_name, O_CREAT | O_WRONLY, S_IRWXU | S_IRWXG, attr);
-	if (mqs[mqs_index] == -1) {
+	int i = get_free_mq(mqs, MAX_CONNECTIONS);
+	if (i < 0) {
+		return MAX_CONNECTIONS_EC;
+	}
+
+	mqs[i] = mq_open(message->mq_name, O_CREAT | O_WRONLY, S_IRWXU | S_IRWXG, attr);
+	if (mqs[i] == -1) {
 		return errno;
 	}
-	mq_send(mqs[mqs_index], (char*)msg, MQ_MAX_MSG_SIZE, 0);
+
+
+	PASSWORD_MSG_T password_message;
+	password_message.type 	= NEW_PASSWORD;
+	password_message.length = pass_length;
+	strdup(password_message.pass, current_password); 
+
+	mq_send(mqs[i], (char*)password_message, MQ_MAX_MSG_SIZE, 0);
 	return 0;
 }
 
@@ -139,9 +150,18 @@ int generate_password(char *password, int length){
     while (i < length) {
     	char ch;
     	while(!isprint(ch = MTA_get_rand_char())){}
-    	buffer[i] = ch;
+    	password[i] = ch;
     	i++; 
     }
     return 0;
+ }
+
+ int find_free_mq(mqd_t *mqs, int length) {
+ 	for (int i = 0; i < length; i++) {
+ 		if (mqs[i] == -1) {
+ 			return i;
+ 		}
+ 	}
+ 	return -1
  }
  
