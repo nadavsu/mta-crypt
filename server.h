@@ -11,5 +11,6 @@ int encrypt_password(char *password, int password_length, char *key, int key_len
 int update_decrypters(PASSWORD_MSG_T message, int message_size);
 int generate_key(char *key, int key_length);
 int generate_password(char *password, int length);
+int find_free_mq(mqd_t *mqs, int length);
 
 #endif
