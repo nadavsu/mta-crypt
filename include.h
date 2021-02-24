@@ -8,6 +8,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <mta_crypt.h>
+#include <mta_rand.h>
 
 #define MAX_CONNECTIONS				31
 
@@ -25,7 +29,7 @@
 
 #define MAX_CONNECTIONS_EC			-1
 
-typdef enum TYPE {
+typedef enum TYPE {
 	NEW_CONNECTION,
 	CLOSE_CONNECTION,
 	NEW_PASSWORD,
@@ -54,7 +58,7 @@ typedef struct NEW_CONNECTION_MESSAGE {
 typedef struct CLOSE_CONNECTION_MSG {
 	enum TYPE type;
 	char mq_name[MQ_NAME_LEN];
-} CLOSE_CONNECTION_MSG_T
+} CLOSE_CONNECTION_MSG_T;
 
 #endif
 
