@@ -10,8 +10,11 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#include <mta_crypt.h>
-#include <mta_rand.h>
+#include <ctype.h>
+#include <time.h>
+
+#include "mta_rand.h"
+#include "mta_crypt.h"
 
 #define MAX_CONNECTIONS				31
 
@@ -62,24 +65,3 @@ typedef struct CLOSE_CONNECTION_MSG {
 
 #endif
 
-
-//server
-	//open mq server_mq
-	//while (1) and listens for messages
-		//if new request
-			//create new mq with name mq_pid;
-			//send password down queue.
-		//if decrypted password
-
-
-
-
-
-//decrypter
-	//open sever_mq message queue
-	//send message request on server_mq
-	//wait for mq name
-	//when it has mq name
-	//listen for password on mq name
-	//start decrypting.
-	//when decrypted - send password to server_mq
