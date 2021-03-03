@@ -2,14 +2,14 @@
 A bruteforce password decryptor for the RC2_ECB encryption algorithm.
 
 ## Usage
-To start the program write `make` and then sudo ./launcher.out [# clients] -l [# password] [-r optional] [# rounds]
-for example: sudo ./launcher.out 4 -l 8 -r 3
+To start the program write `make` and then `sudo ./launcher.out [# clients] -l [# password] [-r optional] [# rounds]`
+for example: `sudo ./launcher.out 4 -l 8 -r 3`
 
-To run server : sudo ./server.out -l [# password] 
-For example: sudo ./server.out -l 8
+To run server : `sudo ./server.out -l [# password]`
+For example: `sudo ./server.out -l 8`
 
-To run decrypter: sudo ./decrypter [id]
-For example: sudo ./decrypter.out 1
+To run decrypter: `sudo ./decrypter [id]`
+For example: `sudo ./decrypter.out 1`
  
  
 ## Dependencies
@@ -18,10 +18,10 @@ For example: sudo ./decrypter.out 1
 
 
 * We support password length
-* After Dercyptor finds a printable password it continues to decrypt until gets an acknowledgement
+* After decryptor finds a printable password it continues to decrypt until gets an acknowledgement
   from the server that the password decrypted , then waits until recieving new password.
  
  
 ## Contributors
-Nadav Suliman
-Shimon Arshavsky
+- Nadav Suliman
+- Shimon Arshavsky
