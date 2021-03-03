@@ -1,12 +1,9 @@
 #ifndef LAUNCHER_H
 #define LAUNCHER_H
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
 
-#define SERVER_NAME		"server.out"
-#define DECRYPTER_NAME	"decrypter.oust"
+#define SERVER_PROG		"server.out"
+#define DECRYPTER_PROG	       "decrypter.out"
 
 int create_process(const char *process_name, char *argv[]);
 

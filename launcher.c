@@ -1,25 +1,37 @@
+#include "include.h"
 #include "launcher.h"
 
 int main (int argc, char *argv[]) {
-    int num_of_decrypters = atoi(argv[1]);
-    char *num_of_round = NULL;
-    if (argc == 4) {
-    	num_of_round = argv[3];
-    }
 
-    /*
-     * Creating server.
-     */
+    if(argc < 4){
+       printf("[ERROR]      too few arguments [# clients] -l [# password length] [-r optional] [# rounds]\n");
+       exit(-1); 
+    }
+        
+    int num_decrypters = atoi(argv[1]);
+    char* rounds = NULL;
+    if (argc == 6) {
+    	rounds = argv[5];
+    }
+    
+
     if (vfork() == 0) {
-    	char *server_argv[2] = {SERVER_NAME, 0};
-    	execv(SERVER_NAME, server_argv);
+    	char *server_argv[] = {SERVER_PROG, "-l", argv[3], 0};
+    	execv(SERVER_PROG, server_argv);
     }
 
-    for (int i = 0; i < num_of_decrypters; ++i) {
+   
+    
+    char buffer[10];
+    
+    for (int i = 0; i < num_decrypters; ++i) {
     	if (vfork() == 0) {
-    		char *decrypter_argv[] = {DECRYPTER_NAME, "-n", num_of_round};
-    		execv(DECRYPTER_NAME, decrypter_argv);
+    	        sprintf(buffer, "%d",i+1);
+    		char *decrypter_argv[] = {DECRYPTER_PROG, buffer, "-n", rounds, 0};
+    		execv(DECRYPTER_PROG, decrypter_argv);
     	}
     }
+    
+    while(wait(NULL) != -1);
     return 0;
 }
