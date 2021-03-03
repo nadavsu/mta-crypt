@@ -24,12 +24,12 @@
 
 #define INFO                                  "[INFO]"
 #define OK                                    "[OK]"
-#define ERROR                                  "[ERROR]"
+#define ERROR                                 "[ERROR]"
 
 #define SERVER_MQ_NAME				"/server_mq"
 #define SERVER_MQ_IND				0
 
-#define MQ_MAX_MESSAGE				64
+#define MQ_MAX_MESSAGE				9
 #define MQ_MAX_MESSAGE_SIZE			128
 
 
@@ -37,7 +37,7 @@
 
 #define MQ_NAME_LEN 				32
 
-#define BUFFER_SIZE                           64
+#define BUFFER_SIZE                 64
 
 
 
