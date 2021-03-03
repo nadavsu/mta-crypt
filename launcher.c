@@ -20,7 +20,7 @@ int main (int argc, char *argv[]) {
     	execv(SERVER_PROG, server_argv);
     }
 
-   wait(NULL);
+   
     
     char buffer[10];
     
