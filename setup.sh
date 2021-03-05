@@ -1,4 +1,9 @@
 #!/bin/bash -ex
+################################################
+# Vagrant setup file.
+# This file runs when a Vagrant VM is created.
+################################################
+#
 # The -e option would make our script exit with an error if any command 
 # fails while the -x option makes verbosely it output what it does
 
