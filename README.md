@@ -15,7 +15,7 @@ For example: `sudo ./decrypter.out 1`
 ## Dependencies
 * [mta_crypt_lib](https://github.com/gavrielk/LinuxCourseCodePub/tree/master/mta_crypt_lib) should be installed
 
-
+## More info
 * We support password length
 * After decryptor finds a printable password it continues to decrypt until gets an acknowledgement
   from the server that the password decrypted , then waits until recieving new password.
