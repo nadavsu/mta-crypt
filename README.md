@@ -13,7 +13,6 @@ For example: `sudo ./decrypter.out 1`
  
  
 ## Dependencies
-* Ubuntu 18.04+ (run `vagrant up` to easily install development environment)
 * [mta_crypt_lib](https://github.com/gavrielk/LinuxCourseCodePub/tree/master/mta_crypt_lib) should be installed
 
 
